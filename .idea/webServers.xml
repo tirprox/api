@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5e1f6536-0a1f-4720-ab5d-dcfc2f155d30" name="dreamwhite.ru/api" url="http://178.63.10.81">
+        <fileTransfer host="178.63.10.81" port="22" rootFolder="/var/www/vhosts/dreamwhite.ru/dreamwhite.ru/api/v1" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
