@@ -68,6 +68,9 @@ function formatPhone(string $phone) : array {
 function formatBirthday($date) : string {
     if ($date!==null) {
         $parsed = date_parse($date);
+        if ($parsed['day'] < 10) $parsed['day'] = 0 . $parsed['day'];
+        if ($parsed['month'] < 10) $parsed['month'] = 0 . $parsed['month'];
+
         return $parsed['day']  . '.' . $parsed['month'] . '.' .$parsed['year'] ;
     }
     else return '';
