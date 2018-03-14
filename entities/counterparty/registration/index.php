@@ -1,7 +1,7 @@
 <?php
 namespace dreamwhiteAPIv1;
 
-require_once "../includes.php";
+require "../../../includes.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 

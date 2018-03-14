@@ -1,6 +1,6 @@
 <?php
-require '../vendor/autoload.php';
-include "REGAuth.php";
+//require '../vendor/autoload.php';
+//include "REGAuth.php";
 
 use GuzzleHttp\Promise;
 use GuzzleHttp\Client;

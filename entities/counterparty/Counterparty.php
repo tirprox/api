@@ -1,11 +1,13 @@
 <?php
 namespace dreamwhiteAPIv1;
 
-require_once "../../includes.php";
+//require_once "../../includes.php";
 
 class Counterparty
 {
     const COUNTERPARTY_BASE_URL = "https://online.moysklad.ru/api/remap/1.1/entity/counterparty/";
+
+    public $raw = [];
 
     // Hardcoded into MS
     public $props = [
@@ -78,6 +80,14 @@ class Counterparty
         return $this;
     }
 
+    function raw($raw = null) {
+        if ($raw===null) {
+            return $this->raw;
+        }
+        $this->raw = $raw;
+        return $this;
+    }
+
     function id($id = null) {
         if ($id===null) {
             return $this->props['id'];
@@ -145,12 +155,20 @@ class Counterparty
         if ($date === null) {
             return $this->attrs[$name]['value'];
         }
-        else {
+        else if ($date!=='') {
             $this->attrs[$name] = [
                 "id" =>  Counterparty::$attrIDs[$name],
                 "type" =>  "string",
                 "value" => self::prepare_time($date, $time),
             ];
+            return $this;
+        }
+        else {
+            /*$this->attrs[$name] = [
+                "id" =>  Counterparty::$attrIDs[$name],
+                "type" =>  "string",
+                "value" => self::prepare_time('', $time),
+            ];*/
             return $this;
         }
     }
@@ -174,6 +192,7 @@ class Counterparty
 
     function birthday(string $arg = null, string $time = '12:00:00') {
         $fname = __FUNCTION__;
+
         return $this->timeAttr($fname, $arg, $time);
     }
 

@@ -1,20 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dreamwhite
- * Date: 12.03.2018
- * Time: 18:46
- */
 
 namespace dreamwhiteAPIv1;
-require_once "../../../includes.php";
+//require "../includes.php";
 
 class DataHelper
 {
-    static function encode($data) {
+    static function encode($data, $tag) {
         $counterparty = new Counterparty();
         $counterparty
             ->id($data['id'])
+            ->addTag($tag)
             ->name($data['client']['name'])
             ->lastName($data['client']['lastName'])
             ->birthday($data['client']['birthday'])
@@ -27,6 +22,8 @@ class DataHelper
 
         $source = $data['infoSource']['isCustom'] ? $data['infoSource']['custom'] : $data['infoSource']['source'];
         $counterparty->source($source);
+
+        //echo json_encode($counterparty,JSON_UNESCAPED_UNICODE);
         return $counterparty;
     }
 }

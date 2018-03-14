@@ -1,7 +1,7 @@
 <?php
 
 namespace dreamwhiteAPIv1;
-require_once "../includes.php";
+//require_once "../includes.php";
 
 use \GuzzleHttp\Promise;
 use \GuzzleHttp\Client;

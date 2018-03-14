@@ -1,8 +1,8 @@
 <?php
 namespace dreamwhiteAPI;
 
-require '../vendor/autoload.php';
-include "Auth.php";
+//require '../vendor/autoload.php';
+//include "Auth.php";
 
 use GuzzleHttp\Promise;
 use GuzzleHttp\Client;

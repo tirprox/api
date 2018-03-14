@@ -1,6 +1,6 @@
 <?php
 namespace dreamwhiteAPI;
-require "CounterpartyGetter.php";
+//require "CounterpartyGetter.php";
 $input = json_decode(file_get_contents('php://input'));
 $phone = $input->phone;
 

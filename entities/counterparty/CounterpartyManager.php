@@ -7,7 +7,7 @@
  */
 
 namespace dreamwhiteAPIv1;
-require_once "../../includes.php";
+//require_once "../../includes.php";
 
 class CounterpartyManager
 {
@@ -55,6 +55,8 @@ class CounterpartyManager
         }
 
         $encoded['attributes'] = $a;
+
+        //echo json_encode($encoded,JSON_UNESCAPED_UNICODE);
         return json_encode($encoded, JSON_UNESCAPED_UNICODE);
 
     }
@@ -62,6 +64,7 @@ class CounterpartyManager
     function decode($json) /*: Counterparty*/ {
         $json = json_decode($json, true);
         $counterparty = new Counterparty();
+
 
         /* When accessing a counterparty by id, it won't return a row, but it returns rows on search and filter */
         $data = [];
@@ -72,6 +75,8 @@ class CounterpartyManager
             $data = $json;
         }
 
+        $counterparty->raw = $json;
+
 
         // Encoding props
         foreach ($counterparty->props as $key => $value) {
@@ -79,14 +84,17 @@ class CounterpartyManager
         }
 
         // Encoding attributes
-        foreach ($data['attributes'] as $attr) {
-            $a = [
-                'id' => $attr['id'],
-                'value' => $attr['value'],
-                'type' => $attr['type'],
-            ];
-            $counterparty->attrs[ Counterparty::$attrAlias[ $attr['name'] ] ] = $a;
+        if (array_key_exists('attributes', $data)) {
+            foreach ($data['attributes'] as $attr) {
+                $a = [
+                    'id' => $attr['id'],
+                    'value' => $attr['value'],
+                    'type' => $attr['type'],
+                ];
+                $counterparty->attrs[ Counterparty::$attrAlias[ $attr['name'] ] ] = $a;
+            }
         }
+
 
         return $counterparty;
     }

@@ -1,8 +1,11 @@
 <?php
 
 namespace dreamwhiteAPIv1;
+
 header("Access-Control-Allow-Origin: *");
-require_once "../../../includes.php";
+header('Content-type: application/json');
+
+require "../../../includes.php";
 
 /*ini_set('display_startup_errors', 1);
 ini_set('display_errors', 1);
@@ -14,7 +17,7 @@ $phone = $input->phone;
 $manager = new CounterpartyManager();
 $counterparty = $manager->getByPhone($phone);
 
-header('Content-type: application/json');
+
 
 //$data = [];
 $data['id'] = $counterparty->id();
@@ -28,6 +31,12 @@ $data['address'] = $counterparty->address();
 $data['postcode'] = $counterparty->postcode();
 $data['phone'] = formatPhone($counterparty->phone());
 $data['email'] = $counterparty->email();
+
+foreach ($data as $key => $value) {
+    if ($value==null) {
+        $value = '';
+    }
+}
 
 echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
@@ -56,7 +65,11 @@ function formatPhone(string $phone) : array {
     return $data;
 }
 
-function formatBirthday(string $date) : string {
-    $parsed = date_parse($date);
-    return $parsed['day']  . '.' . $parsed['month'] . '.' .$parsed['year'] ;
+function formatBirthday($date) : string {
+    if ($date!==null) {
+        $parsed = date_parse($date);
+        return $parsed['day']  . '.' . $parsed['month'] . '.' .$parsed['year'] ;
+    }
+    else return '';
+
 }
