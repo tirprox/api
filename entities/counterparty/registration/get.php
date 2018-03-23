@@ -11,8 +11,10 @@ require "../../../includes.php";
 ini_set('display_errors', 1);
 error_reporting(-1);*/
 
-$input = json_decode(file_get_contents('php://input'));
-$phone = $input->phone;
+//$input = json_decode(file_get_contents('php://input'));
+//$phone = $input->phone;
+
+$phone = Input::get()['phone'];
 
 $manager = new CounterpartyManager();
 $counterparty = $manager->getByPhone($phone);
@@ -31,6 +33,9 @@ $data['address'] = $counterparty->address();
 $data['postcode'] = $counterparty->postcode();
 $data['phone'] = formatPhone($counterparty->phone());
 $data['email'] = $counterparty->email();
+
+$data['group'] = $counterparty->group();
+$data['owner'] = $counterparty->owner();
 
 foreach ($data as $key => $value) {
     if ($value==null) {

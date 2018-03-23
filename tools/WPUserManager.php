@@ -94,7 +94,7 @@ class WPUserManager
 
 
     function sendMail(array $userdata){
-        add_filter( 'wp_mail_from', 'my_mail_from' );
+        add_filter( 'wp_mail_from', [__CLASS__, 'my_mail_from'] );
         $to = $userdata['user_email'];
         $subject = 'Регистрация на сайте dreamwhite.ru';
         $body = "Ваши данные для входа: " . "\nЛогин: " . $userdata['user_login'] . "\nПароль: " . $userdata['user_pass'];

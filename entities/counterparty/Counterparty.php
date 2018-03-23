@@ -17,6 +17,8 @@ class Counterparty
         'phone' => '',
         'email' => '',
         'tags' => [],
+        'owner' => '',
+        'group' => ''
     ];
 
 
@@ -133,6 +135,22 @@ class Counterparty
         return $this;
     }
 
+    function owner($ownerUrl = null) {
+        if ($ownerUrl===null) {
+            return $this->props['owner'];
+        }
+        $this->props['owner'] = $ownerUrl;
+        return $this;
+    }
+
+    function group($groupUrl = null) {
+        if ($groupUrl===null) {
+            return $this->props['group'];
+        }
+        $this->props['group'] = $groupUrl;
+        return $this;
+    }
+
 
     /*---------------------------------------------*/
 
@@ -185,6 +203,11 @@ class Counterparty
         return $this->stringAttr($fname, $arg);
     }
 
+    function feedback(string $arg = null) {
+        $fname = __FUNCTION__;
+        return $this->stringAttr($fname, $arg);
+    }
+
     function dateRegistered(string $arg = null, string $time = '12:00:00') {
         $fname = __FUNCTION__;
         return $this->timeAttr($fname, $arg, $time);
@@ -221,6 +244,20 @@ class Counterparty
         return $this->stringAttr($fname, $arg);
     }
 
+
+    /***************** SMS verification part *******************/
+    var $allowedOwners = [
+        'https://online.moysklad.ru/api/remap/1.1/entity/employee/57e00517-e00e-11e6-7a69-9711001f6490'// Анна - Флигель
+    ];
+
+
+    const ANNA_FLIGEL = 'https://online.moysklad.ru/api/remap/1.1/entity/employee/57e00517-e00e-11e6-7a69-9711001f6490';
+
+    function isSMS() {
+        //return in_array($this->props['owner'], $this->allowedOwners);
+        return self::ANNA_FLIGEL===$this->props['owner'];
+    }
+
     /*---------------------------------------------*/
 
     static function prepare_phone($phone): string {
@@ -236,4 +273,6 @@ class Counterparty
         $timeString = $dateArray['year']. "-" . $dateArray['month']. "-" . $dateArray['day'] . " " . $time;
         return $timeString;
     }
+
+
 }

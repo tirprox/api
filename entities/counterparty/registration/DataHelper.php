@@ -7,6 +7,7 @@ class DataHelper
 {
     static function encode($data, $tag) {
         $counterparty = new Counterparty();
+
         $counterparty
             ->id($data['id'])
             ->addTag($tag)
@@ -22,6 +23,7 @@ class DataHelper
 
         $source = $data['infoSource']['isCustom'] ? $data['infoSource']['custom'] : $data['infoSource']['source'];
         $counterparty->source($source);
+        $counterparty->feedback($data['feedback']);
 
         //echo json_encode($counterparty,JSON_UNESCAPED_UNICODE);
         return $counterparty;

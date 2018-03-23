@@ -65,8 +65,7 @@ class CounterpartyManager
         $json = json_decode($json, true);
         $counterparty = new Counterparty();
 
-
-        /* When accessing a counterparty by id, it won't return a row, but it returns rows on search and filter */
+        /* When accessing a counterparty by id, it doesn't have rows, but it returns rows on search and filter */
         $data = [];
         if (isset($json['rows'])) {
             $data = $json['rows'][0];
@@ -77,10 +76,15 @@ class CounterpartyManager
 
         $counterparty->raw = $json;
 
-
         // Encoding props
         foreach ($counterparty->props as $key => $value) {
-            $counterparty->props[$key] = $data[$key] ?? '';
+            if ($key === 'owner' || $key === 'group') {
+                $counterparty->props[$key] = $data[$key]['meta']['href'] ?? '';
+            }
+            else {
+               $counterparty->props[$key] = $data[$key] ?? '';
+            }
+
         }
 
         // Encoding attributes
