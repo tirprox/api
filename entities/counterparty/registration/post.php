@@ -7,20 +7,27 @@ $data = json_decode(file_get_contents('php://input'), true);
 if (array_key_exists('data', $data)) {
     $data = $data['data'];
 }
-//file_put_contents('post_test.txt', json_encode($data, JSON_UNESCAPED_UNICODE));
+
+$manager = new CounterpartyManager();
+$retrieved = $manager->getByPhone($data['client']['phone']['full']);
+
+$exists = $retrieved->id() !== '';
 
 
 $counterparty = DataHelper::encode($data, 'anketa-site');
 
-$manager = new CounterpartyManager();
 
-$exists = $manager->getByPhone($counterparty->phone())->id() !== '';
+
+
+//Log::log($counterparty->id() . ' ' . $retrieved->id() . ' ' . $exists ? 'found' : 'not found' . '\n');
+//Log::log($manager->encode($retrieved) . '\n');
 
 if (!$exists)  {
     $manager->post($counterparty);
 }
 
 else {
+    $counterparty->id($retrieved->id());
     $manager->put($counterparty);
 }
 

@@ -20,8 +20,17 @@ class Connector
     {
         $headers = [
             'auth' => [Auth::login, Auth::password],
-            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Basic '. base64_encode(Auth::login.':'.Auth::password),],
-            'stream_context' => [ 'ssl' => [ 'allow_self_signed' => true ] ],
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic '. base64_encode(Auth::login.':'.Auth::password),
+                //'Connection' => 'close',
+                //'Expect100Continue' => false,
+                ],
+            'stream_context' => [
+                'ssl' => [
+                    'allow_self_signed' => true
+                ]
+            ],
             'verify' => false,
         ];
         $this->client = new Client($headers);

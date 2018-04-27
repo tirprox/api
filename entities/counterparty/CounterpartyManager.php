@@ -13,7 +13,7 @@ class CounterpartyManager
 {
     const COUNTERPARTY_BASE_URL = "https://online.moysklad.ru/api/remap/1.1/entity/counterparty/";
     const MS_BASE_URL = "https://online.moysklad.ru/api/remap/1.1/entity/";
-
+    const MS_REPORT_URL = "https://online.moysklad.ru/api/remap/1.1/report/counterparty";
     private $client;
 
     function __construct()
@@ -22,9 +22,9 @@ class CounterpartyManager
         $this->client = $connector->client;
     }
 
-
     //returns encoded json string ready to be sent
-    function encode(Counterparty $counterparty) : string {
+    function encode(Counterparty $counterparty): string
+    {
 
         $encoded = [
             "name" => $counterparty->props['name'],
@@ -40,18 +40,26 @@ class CounterpartyManager
                     "mediaType" => "application/json"
                 ]
             ],
-           // "attributes" => $counterparty->attrs
+            // "attributes" => $counterparty->attrs
         ];
+
+        /*if ($counterparty->id() !== '') {
+            $encoded['id'] = $counterparty->id();
+        }*/
 
         $a = [];
 
         foreach ($counterparty->attrs as $name => $parameters) {
-            $a[] = [
-                'id' => $parameters['id'],
-                'name' => array_search ($name, Counterparty::$attrAlias),
-                'type' => $parameters['type'],
-                'value' => $parameters['value']
-            ];
+            if ($parameters['value'] !== '') {
+                $a[] = [
+                    'id' => $parameters['id'],
+                    'name' => array_search($name, Counterparty::$attrAlias),
+                    'type' => $parameters['type'],
+                    'value' => $parameters['value']
+                ];
+
+            }
+
         }
 
         $encoded['attributes'] = $a;
@@ -61,85 +69,181 @@ class CounterpartyManager
 
     }
 
-    function decode($json) /*: Counterparty*/ {
+    function decode($json) /*: Counterparty*/
+    {
         $json = json_decode($json, true);
         $counterparty = new Counterparty();
 
         /* When accessing a counterparty by id, it doesn't have rows, but it returns rows on search and filter */
         $data = [];
         if (isset($json['rows'])) {
+            if (empty($json['rows'])) return $counterparty;
             $data = $json['rows'][0];
-        }
-        else {
+        } else {
             $data = $json;
         }
 
         $counterparty->raw = $json;
 
+
         // Encoding props
         foreach ($counterparty->props as $key => $value) {
             if ($key === 'owner' || $key === 'group') {
                 $counterparty->props[$key] = $data[$key]['meta']['href'] ?? '';
-            }
-            else {
-               $counterparty->props[$key] = $data[$key] ?? '';
+            } else {
+                $counterparty->props[$key] = $data[$key] ?? '';
             }
 
         }
+
+        $counterparty->id($data['id']);
 
         // Encoding attributes
         if (array_key_exists('attributes', $data)) {
             foreach ($data['attributes'] as $attr) {
-                $a = [
-                    'id' => $attr['id'],
-                    'value' => $attr['value'],
-                    'type' => $attr['type'],
-                ];
-                $counterparty->attrs[ Counterparty::$attrAlias[ $attr['name'] ] ] = $a;
+                if ($attr['value'] !== '') {
+                    $a = [
+                        'id' => $attr['id'],
+                        'value' => $attr['value'],
+                        'type' => $attr['type'],
+                    ];
+                    $counterparty->attrs[Counterparty::$attrAlias[$attr['name']]] = $a;
+                }
+
             }
         }
-
 
         return $counterparty;
     }
 
 
-    function getByPhone(string $phone) : Counterparty {
+    function getByPhone(string $phone): Counterparty
+    {
         return $this->search($phone);
     }
 
-    function getByEmail(string $email) : Counterparty {
+    function getByEmail(string $email): Counterparty
+    {
         return $this->search($email);
     }
 
-    function filter(string $attr, string $query) {
+    function filter(string $attr, string $query)
+    {
         $url = self::MS_BASE_URL . 'counterparty?filter=' . $attr . '=' . $query;
         $response = $this->client->get($url);
         return $this->decode($response->getBody());
     }
 
-    function search(string $query) {
+    function search(string $query)
+    {
         $url = self::MS_BASE_URL . 'counterparty?search=' . $query;
         $response = $this->client->get($url);
         return $this->decode($response->getBody());
     }
 
-    function getById(string $id) : Counterparty {
+    function getAll()
+    {
+        $limitedUrl = self::MS_BASE_URL . "counterparty?limit=100";
+
+        $responses = [];
+        $response = $this->client->get($limitedUrl);
+        $response = json_decode($response->getBody(), true);
+        $size = $response['meta']['size'];
+        $responses = array_merge($response['rows'], $responses);
+
+        $offset = 100;
+
+        $requests = [];
+
+        while ($offset < $size) {
+            //print $offset . " ";
+            $url = $limitedUrl . "&offset=" . $offset;
+            $requests[] = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $offset+=100;
+        }
+        $counter = 0;
+
+        $pool = new \GuzzleHttp\Pool($this->client, $requests, [
+            'concurrency' => 5,
+            'fulfilled' => function ($response, $index) use (&$responses, $counter) {
+                $response = json_decode($response->getBody(), true);
+                print $response['meta']['href'] . "\n";
+                $responses = array_merge($responses, $response['rows']);
+
+                // this is delivered each successful response
+            },
+            'rejected' => function ($reason, $index) {
+                // this is delivered each failed request
+            },
+        ]);
+
+        $pool->promise()->wait();
+
+        print count($responses) . " \n";
+        return $responses;
+    }
+
+    function getAllReports()
+    {
+        $limitedUrl = self::MS_REPORT_URL . "?limit=100";
+
+        $responses = [];
+        $response = $this->client->get($limitedUrl);
+        $response = json_decode($response->getBody(), true);
+        $size = $response['meta']['size'];
+        $responses = array_merge($response['rows'], $responses);
+
+        $offset = 100;
+
+        $requests = [];
+
+        while ($offset < $size) {
+            //print $offset . " ";
+            $url = $limitedUrl . "&offset=" . $offset;
+            $requests[] = new \GuzzleHttp\Psr7\Request('GET', $url);
+            $offset+=100;
+        }
+        $counter = 0;
+
+        $pool = new \GuzzleHttp\Pool($this->client, $requests, [
+            'concurrency' => 5,
+            'fulfilled' => function ($response, $index) use (&$responses, $counter) {
+                $response = json_decode($response->getBody(), true);
+                print $response['meta']['href'] . "\n";
+                $responses = array_merge($responses, $response['rows']);
+
+                // this is delivered each successful response
+            },
+            'rejected' => function ($reason, $index) {
+                // this is delivered each failed request
+            },
+        ]);
+
+        $pool->promise()->wait();
+
+        print count($responses) . " \n";
+        return $responses;
+    }
+
+    function getById(string $id): Counterparty
+    {
         return $this->getByUrl(self::COUNTERPARTY_BASE_URL . $id);
     }
 
-    function getByUrl(string $url) : Counterparty {
+    function getByUrl(string $url): Counterparty
+    {
         $response = $this->client->get($url);
         return $this->decode($response->getBody());
     }
 
-
-    function post(Counterparty $counterparty) {
+    function post(Counterparty $counterparty)
+    {
         $body = $this->encode($counterparty);
         $this->client->post(self::COUNTERPARTY_BASE_URL, ['body' => $body]);
     }
 
-    function put(Counterparty $counterparty) {
+    function put(Counterparty $counterparty)
+    {
         $body = $this->encode($counterparty);
         $this->client->put($counterparty->props['href'], ['body' => $body]);
     }

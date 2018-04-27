@@ -169,14 +169,14 @@ class Counterparty
 
     }
 
-    function timeAttr(string $name, $date = null, string $time = '12:00:00') {
+    function timeAttr(string $name, $date = null, $time = '12:00:00') {
         if ($date === null) {
             return $this->attrs[$name]['value'];
         }
         else if ($date!=='') {
             $this->attrs[$name] = [
                 "id" =>  Counterparty::$attrIDs[$name],
-                "type" =>  "string",
+                "type" =>  "time",
                 "value" => self::prepare_time($date, $time),
             ];
             return $this;
@@ -208,12 +208,12 @@ class Counterparty
         return $this->stringAttr($fname, $arg);
     }
 
-    function dateRegistered(string $arg = null, string $time = '12:00:00') {
+    function dateRegistered(string $arg = null, $time = '12:00:00') {
         $fname = __FUNCTION__;
         return $this->timeAttr($fname, $arg, $time);
     }
 
-    function birthday(string $arg = null, string $time = '12:00:00') {
+    function birthday(string $arg = null, $time = '12:00:00') {
         $fname = __FUNCTION__;
 
         return $this->timeAttr($fname, $arg, $time);

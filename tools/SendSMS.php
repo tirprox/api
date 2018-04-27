@@ -18,7 +18,8 @@ class SendSMS
     $smsru = new \SMSRU('255cfabf-5372-1c14-31ee-9fb931afd3b1');
     $data = new \stdClass();
     $data->to = $phone;
-    $data->text = $name . ', спасибо за покупку! Сгораемая ссылка на вечную скидку: https://dreamwhite.ru/registration?n=' . $this->prepare_phone($phone); // Текст сообщения
+      $data->text = 'Заверши регистрацию сегодня! https://dreamwhite.ru/registration?n=' . $this->prepare_phone($phone); // Текст сообщения
+    //$data->text = $name . ', спасибо за покупку! Сгораемая ссылка на вечную скидку: https://dreamwhite.ru/registration?n=' . $this->prepare_phone($phone); // Текст сообщения
     $data->from = 'DreamWhite'; // Если у вас уже одобрен буквенный отправитель, его можно указать здесь, в противном случае будет использоваться ваш отправитель по умолчанию
 // $data->time = time() + 7*60*60; // Отложить отправку на 7 часов
 // $data->translit = 1; // Перевести все русские символы в латиницу (позволяет сэкономить на длине СМС)
