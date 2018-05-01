@@ -28,14 +28,17 @@ function getFiles() {
         );
 
         $attrs = [];
-        foreach ($party['attributes'] as $attr) {
-            $attrs[$attr['name']] = $attr['value'];
+        if (isset($party['attributes'])) {
+           foreach ($party['attributes'] as $attr) {
+              $attrs[$attr['name']] = $attr['value'];
+           }
         }
+        
 
         $party['attributes'] = $attrs;
 
-        $party['owner'] = $party['owner']['meta']['href'];
-        $party['group'] = $party['group']['meta']['href'];
+        $party['owner'] = $party['owner']['meta']['href'] ?? "";
+        $party['group'] = $party['group']['meta']['href'] ?? "";
 
         $partyMap[$party['id']] = $party;
 
@@ -53,7 +56,10 @@ function getFiles() {
 
     $map = [];
     foreach ($reportMap as $id => $report) {
-        $map[] = array_merge($report, $partyMap[$id]);
+       if (isset($partyMap[$id])) {
+          $map[] = array_merge($report, $partyMap[$id]);
+       }
+       
 
     }
 
@@ -65,6 +71,6 @@ function getFiles() {
 
 }
 
-//getFiles();
+getFiles();
 $visitors = new VisitorManager();
 $visitors->buckets();

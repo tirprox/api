@@ -60,8 +60,8 @@ class VisitorManager
             if ($siteVisitor['salesAmount'] == 0) {
                 //step 3: registered in more than 14 days
 
-                if ($siteVisitor['lastDemandDate'] !== null) {
-                    $updated = strtotime($siteVisitor['lastDemandDate']);
+                if ($siteVisitor['updated'] !== null) {
+                    $updated = strtotime($siteVisitor['updated']);
                     if( $updated < $this->olderThan(14)) {
                         $notBought[] = $siteVisitor;
                     }
@@ -103,6 +103,10 @@ class VisitorManager
                 if( $updated < $this->olderThan(150)) {
                     $notBoughtIn150Days[] = $visitor;
                 }
+            }
+            else if ($visitor['salesAmount'] > 0) {
+               $notBoughtIn90Days[] = $visitor;
+               $notBoughtIn150Days[] = $visitor;
             }
 
         }
@@ -212,12 +216,27 @@ class VisitorManager
             $phones = "";
 
             foreach ($list as $visitor) {
-                $phones .= $visitor['phone'] . PHP_EOL;
+               if (isset($visitor['phone'])) {
+                  $phones .= $visitor['phone'] . PHP_EOL;
+               }
+               
             }
 
             $this->save($title, $phones);
         }
     }
+    
+    function isOldClient($tags) {
+       return (in_array("anketa", $tags) || in_array("anketa-paper", $tags));
+    }
+    
+    function lastKnownInteraction($visitor) {
+       
+    }
+   
+   function lastKnownPurchase($visitor) {
+   
+   }
 
     function postToVK() {
         $vk = new \VKApiClient();
