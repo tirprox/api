@@ -18,6 +18,7 @@ require_once "entities/assortment/Assortment.php";
 
 require_once "tools/Auth.php";
 require_once "tools/Connector.php";
+require_once "tools/Input.php";
 require_once "tools/Log.php";
 require_once "tools/SendSMS.php";
 require_once "tools/sms.ru.php";
