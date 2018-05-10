@@ -13,6 +13,11 @@ $retrieved = $manager->getByPhone($data['client']['phone']['full']);
 
 $exists = $retrieved->id() !== '';
 
+if (!$exists) {
+    $retrieved = $manager->getByEmail($data['client']['email']);
+    $exists = $retrieved->id() !== '';
+}
+
 
 $counterparty = DataHelper::encode($data, 'anketa-site');
 
