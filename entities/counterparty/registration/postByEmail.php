@@ -8,17 +8,12 @@ if (array_key_exists('data', $data)) {
     $data = $data['data'];
 }
 
-$manager = new CounterpartyManager();
-$retrieved = $manager->getByPhone($data['client']['phone']['full']);
 
+$manager = new CounterpartyManager();
+$retrieved = $manager->getByEmail($data['client']['email']);
 $exists = $retrieved->id() !== '';
 
-if (!$exists) {
-    $retrieved = $manager->getByEmail($data['client']['email']);
-    $exists = $retrieved->id() !== '';
-}
-
-$counterparty = DataHelper::encode($data, 'anketa-site');
+$counterparty = DataHelper::encode($data, 'email');
 
 
 if (!$exists)  {
