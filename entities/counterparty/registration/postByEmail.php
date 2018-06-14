@@ -20,10 +20,10 @@ if (!$exists)  {
     $manager->post($counterparty);
 }
 
-else {
+/*else {
     $counterparty->id($retrieved->id());
     $manager->put($counterparty);
-}
+}*/
 
 //$manager->post($counterparty);
 
