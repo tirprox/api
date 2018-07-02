@@ -18,7 +18,13 @@ $counterparty = $manager->getByUrl($url);
 
 
 $allowedOwners = [
-    'https://online.moysklad.ru/api/remap/1.1/entity/employee/57e00517-e00e-11e6-7a69-9711001f6490'// Анна - Флигель
+    'https://online.moysklad.ru/api/remap/1.1/entity/employee/57e00517-e00e-11e6-7a69-9711001f6490', // Анна - Флигель
+    'https://online.moysklad.ru/api/remap/1.1/entity/employee/9bc26ef1-7160-11e8-9ff4-34e80003dae8', // Аня Прусакова - Москва
+];
+
+$ownerToSiteMap = [
+    'https://online.moysklad.ru/api/remap/1.1/entity/employee/57e00517-e00e-11e6-7a69-9711001f6490' => 'dreamwhite.ru',
+    'https://online.moysklad.ru/api/remap/1.1/entity/employee/9bc26ef1-7160-11e8-9ff4-34e80003dae8' => 'msk.dreamwhite.ru',
 ];
 
 //$anna = 'https://online.moysklad.ru/api/remap/1.1/entity/employee/57e00517-e00e-11e6-7a69-9711001f6490'; // anna
@@ -34,7 +40,7 @@ $tags = $counterparty->props['tags'];
 
 if (empty($tags) && in_array($owner, $allowedOwners)) {
     $sms = new SendSMS();
-    $sms->send($phone, $name);
+    $sms->sendBySite($phone, $name, $ownerToSiteMap[$owner]);
 }
 
 echo $counterparty->props['name'];
