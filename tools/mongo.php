@@ -10,6 +10,8 @@ namespace dreamwhiteAPIv1;
 require "../includes.php";
 
 
+require "TagRewriteRules.php";
+
 $user = "admin";
 $pwd = '6h8s4ksoq';
 
@@ -18,16 +20,7 @@ $client = new \MongoDB\Client("mongodb://${user}:${pwd}@localhost:27017");
 $collection = $client->test->test;
 
 
-$data = [
-    [
-        'name' => 'test',
-        'price' => '110'
-    ],
-    [
-        'name' => 'test2',
-        'price' => '1000'
-    ]
-];
+$data = \TagRewriteRules::$rules;
 
 $update = [
     'name' => 'test',
@@ -37,8 +30,24 @@ $update = [
 $filter  = ['name' => 'test'];
 $options = ['upsert' => true];
 
-$collection->updateOne($filter, ['$set' => $update], $options);
+foreach ($data as $key => $value) {
+    $filter  = ['name' => $key];
+    $values = explode(",", $value);
+
+    $record = [
+      'name' => $key,
+      'colors' => $values
+    ];
 
 
-$result = $collection->findOne(['name' => 'test']);
-var_dump($result);
+    //$collection->updateOne($filter, ['$set' => $record], $options);
+    $collection->updateOne($filter, ['$pull' => ['colors' => 'testColor']], $options);
+}
+
+//$collection->updateOne($filter, ['$set' => $update], $options);
+
+
+$result = $collection->findOne(['name' => 'krasnye-zhenskie-palto']);
+foreach ($result['colors'] as $color) {
+    print($color . PHP_EOL);
+}
