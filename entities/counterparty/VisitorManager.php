@@ -224,6 +224,7 @@ class VisitorManager
 
             $this->save($title, $phones);
         }
+
     }
     
     function isOldClient($tags) {

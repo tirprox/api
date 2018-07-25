@@ -72,5 +72,8 @@ function getFiles() {
 }
 
 getFiles();
+
+
+
 $visitors = new VisitorManager();
 $visitors->buckets();

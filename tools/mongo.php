@@ -10,14 +10,14 @@ namespace dreamwhiteAPIv1;
 require "../includes.php";
 
 
-require "TagRewriteRules.php";
+//require "TagRewriteRules.php";
 
 $user = "admin";
 $pwd = '6h8s4ksoq';
 
 $client = new \MongoDB\Client("mongodb://${user}:${pwd}@localhost:27017");
 
-$collection = $client->test->test;
+$collection = $client->msmirror->counterparties;
 
 
 $data = \TagRewriteRules::$rules;
@@ -27,9 +27,9 @@ $update = [
     'price' => '120'
 ];
 
-$filter  = ['name' => 'test'];
+$filter = ['name' => 'test'];
 $options = ['upsert' => true];
-
+/*
 foreach ($data as $key => $value) {
     $filter  = ['name' => $key];
     $values = explode(",", $value);
@@ -42,12 +42,27 @@ foreach ($data as $key => $value) {
 
     //$collection->updateOne($filter, ['$set' => $record], $options);
     $collection->updateOne($filter, ['$pull' => ['colors' => 'testColor']], $options);
-}
+}*/
 
 //$collection->updateOne($filter, ['$set' => $update], $options);
 
 
-$result = $collection->findOne(['name' => 'krasnye-zhenskie-palto']);
-foreach ($result['colors'] as $color) {
-    print($color . PHP_EOL);
+$result = $collection->aggregate([
+    [
+        '$lookup' => [
+            'from' => 'counterpartyReports',
+            'localField' => 'id',
+            'foreignField' => 'counterparty.id',
+            'as' => 'report'
+        ]
+    ],
+    [
+        '$unwind' => '$report'
+    ]
+], []);
+
+
+
+foreach ($result as $item) {
+    print($item['report']['updated'] . PHP_EOL);
 }

@@ -345,5 +345,44 @@
             "mongodb",
             "persistence"
         ]
+    },
+    {
+        "name": "tooyz/moysklad",
+        "version": "0.4.4",
+        "version_normalized": "0.4.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Tooyz/moysklad.git",
+            "reference": "7d13b78c4a88c90f741e0a324cacb3d364b83151"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Tooyz/moysklad/zipball/7d13b78c4a88c90f741e0a324cacb3d364b83151",
+            "reference": "7d13b78c4a88c90f741e0a324cacb3d364b83151",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/guzzle": "^6.2.1",
+            "php": ">=5.6.0"
+        },
+        "time": "2018-06-28 15:56:57",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "MoySklad\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Tooyz",
+                "email": "tooy_m@mail.ru"
+            }
+        ],
+        "description": "Get it here: https://github.com/Tooyz/moysklad"
     }
 ]

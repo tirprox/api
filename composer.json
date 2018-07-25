@@ -2,6 +2,7 @@
   "require": {
     "guzzlehttp/guzzle": "~6.0",
     "vkcom/vk-php-sdk": "^0.2.0",
-    "mongodb/mongodb": "^1.4"
+    "mongodb/mongodb": "^1.4",
+    "tooyz/moysklad": "^0.4.4"
   }
 }

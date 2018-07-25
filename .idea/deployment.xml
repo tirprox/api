@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="dreamwhiteru@dreamwhite.ru" deleteMissingItems="true">
+  <component name="PublishConfigData" serverName="api.dreamwhite.ru" deleteMissingItems="true">
     <serverData>
+      <paths name="api.dreamwhite.ru">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="dreamwhite.ru/api">
         <serverdata>
           <mappings>
