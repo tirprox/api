@@ -9,9 +9,6 @@
 namespace dreamwhiteAPIv1;
 require "../includes.php";
 
-
-//require "TagRewriteRules.php";
-
 $user = "admin";
 $pwd = '6h8s4ksoq';
 

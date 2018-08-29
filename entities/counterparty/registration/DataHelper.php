@@ -19,7 +19,8 @@ class DataHelper
             ->country($data['client']['location']['country'] ?? "")
             ->city($data['client']['location']['city'] ?? "")
             ->address($data['client']['location']['address'] ?? "")
-            ->postcode($data['client']['location']['postcode'] ?? "");
+            ->postcode($data['client']['location']['postcode'] ?? "")
+            ->promoCode($data['client']['promoCode']);
 
         $source = $data['infoSource']['isCustom'] ? $data['infoSource']['custom'] : $data['infoSource']['source'];
         $counterparty->source($source);

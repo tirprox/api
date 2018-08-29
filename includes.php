@@ -7,7 +7,9 @@ error_reporting(-1);
 
 require_once "vendor/autoload.php";
 
-include_once (dirname(__DIR__, 2) . '/wp-load.php');
+//include_once (dirname(__DIR__, 2) . '/wp-load.php');
+
+include_once (dirname(__DIR__) . '/dreamwhite.ru/wp-load.php');
 
 require_once "entities/counterparty/Counterparty.php";
 require_once "entities/counterparty/CounterpartyManager.php";

@@ -35,6 +35,7 @@ class Counterparty
         'dateRegistered' => 'fe06e948-d034-11e7-7a34-5acf0006a4c3',
         'source' => 'fe06e4f2-d034-11e7-7a34-5acf0006a4c2',
         'feedback' => 'b3d9786a-d361-11e7-7a6c-d2a9001aff01',
+        'promoCode' => '21e1f916-aa1a-11e8-9ff4-315000316505'
     ];
 
     public static $attrAlias = [
@@ -48,6 +49,7 @@ class Counterparty
         'Дата регистрации анкеты' => 'dateRegistered',
         'Источник' => 'source',
         'Отзыв' => 'feedback',
+        'Промокод' => 'promoCode'
     ];
 
     public $attrs = [];
@@ -240,6 +242,11 @@ class Counterparty
     }
 
     function postcode(string $arg = null) {
+        $fname = __FUNCTION__;
+        return $this->stringAttr($fname, $arg);
+    }
+
+    function promoCode(string $arg = null) {
         $fname = __FUNCTION__;
         return $this->stringAttr($fname, $arg);
     }

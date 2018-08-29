@@ -79,8 +79,6 @@ class VisitorManager
         foreach ($this->data as $visitor) {
             if ($visitor['salesAmount'] > 0 || ($visitor['tags'] !== null && (in_array("anketa", $visitor['tags']) || in_array("anketa-paper", $visitor['tags']))) ) {
 
-
-
                 $bought[] = $visitor;
                 $counter++;
 
@@ -97,12 +95,13 @@ class VisitorManager
 
             if ($visitor['lastDemandDate'] !== null) {
                 $updated = strtotime($visitor['lastDemandDate']);
-                if( $updated < $this->olderThan(90)) {
-                    $notBoughtIn90Days[] = $visitor;
-                }
                 if( $updated < $this->olderThan(150)) {
                     $notBoughtIn150Days[] = $visitor;
                 }
+                else if( $updated < $this->olderThan(90)) {
+                    $notBoughtIn90Days[] = $visitor;
+                }
+
             }
             else if ($visitor['salesAmount'] > 0) {
                $notBoughtIn90Days[] = $visitor;

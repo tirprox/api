@@ -29,7 +29,7 @@ class WPUserManager
     {
 
         $login = $counterparty->props['email'];
-        $password = $this->randomPassword(12,5,"lower_case,upper_case,numbers,special_symbols")[0];
+        $password = $this->randomPassword(12,5,"lower_case,upper_case,numbers")[0];
 
         $email = $counterparty->props['email'];
         $phone = $counterparty->props['phone'];
@@ -68,22 +68,38 @@ class WPUserManager
             'role' => $role,
         ];
 
-        $user_id = wp_insert_user( $userdata ); // creating user with set parameters
 
-        update_user_meta( $user_id, 'billing_first_name', $firstName );
-        update_user_meta( $user_id, 'billing_last_name', $lastName );
+        if ($email !== 'samsonov.gleb@gmail.com') {
+            $user = get_user_by('email', $email);
 
-        update_user_meta( $user_id, 'billing_country', $country );
-        update_user_meta( $user_id, 'billing_city', $city );
-        update_user_meta( $user_id, 'billing_address_1', $address );
-        update_user_meta( $user_id, 'billing_postcode', $postcode );
-        //update_user_meta( $user_id, 'billing_state', 1 );
+            if (empty($user)) {
+                $user_id = wp_insert_user( $userdata ); // creating user with set parameters
+            }
+            else {
+                unset($userdata['user_login']);
+                $userdata['ID'] = $user->ID;
+                $user_id = wp_update_user($userdata);
 
-        update_user_meta( $user_id, 'billing_email', $email );
-        update_user_meta( $user_id, 'billing_phone', $phone );
+            }
+
+            //$user_id = wp_insert_user( $userdata ); // creating user with set parameters
+
+            update_user_meta( $user_id, 'billing_first_name', $firstName );
+            update_user_meta( $user_id, 'billing_last_name', $lastName );
+
+            update_user_meta( $user_id, 'billing_country', $country );
+            update_user_meta( $user_id, 'billing_city', $city );
+            update_user_meta( $user_id, 'billing_address_1', $address );
+            update_user_meta( $user_id, 'billing_postcode', $postcode );
+            //update_user_meta( $user_id, 'billing_state', 1 );
+
+            update_user_meta( $user_id, 'billing_email', $email );
+            update_user_meta( $user_id, 'billing_phone', $phone );
 
 
-        $this->sendMail($userdata); // email credentials to user
+            $this->sendMail($userdata); // email credentials to user
+        }
+
 
     }
 
@@ -152,6 +168,6 @@ class WPUserManager
             $passwords[] = $pass;
         }
 
-        return $passwords; // return the generated password
+        return $passwords; // return the generated passwordЙ
     }
 }

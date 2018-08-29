@@ -31,6 +31,7 @@ $data['country'] = $counterparty->country();
 $data['city'] = $counterparty->city();
 $data['address'] = $counterparty->address();
 $data['postcode'] = $counterparty->postcode();
+$data['promoCode'] = $counterparty->promoCode();
 $data['phone'] = formatPhone($counterparty->phone());
 $data['email'] = $counterparty->email();
 
