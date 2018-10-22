@@ -216,7 +216,7 @@ class VisitorManager
 
             foreach ($list as $visitor) {
                if (isset($visitor['phone'])) {
-                  $phones .= $visitor['phone'] . PHP_EOL;
+                  $phones .= Counterparty::prepare_phone($visitor['phone']) . PHP_EOL;
                }
                
             }
@@ -233,7 +233,9 @@ class VisitorManager
     function lastKnownInteraction($visitor) {
        
     }
-   
+
+
+
    function lastKnownPurchase($visitor) {
    
    }
