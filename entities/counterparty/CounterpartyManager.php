@@ -50,7 +50,7 @@ class CounterpartyManager
         $a = [];
 
         foreach ($counterparty->attrs as $name => $parameters) {
-            if ($parameters['value'] !== '') {
+            if ($parameters['value'] !== '' && $parameters['value'] !== null) {
                 $a[] = [
                     'id' => $parameters['id'],
                     'name' => array_search($name, Counterparty::$attrAlias),

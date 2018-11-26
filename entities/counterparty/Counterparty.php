@@ -35,7 +35,8 @@ class Counterparty
         'dateRegistered' => 'fe06e948-d034-11e7-7a34-5acf0006a4c3',
         'source' => 'fe06e4f2-d034-11e7-7a34-5acf0006a4c2',
         'feedback' => 'b3d9786a-d361-11e7-7a6c-d2a9001aff01',
-        'promoCode' => '21e1f916-aa1a-11e8-9ff4-315000316505'
+        'promoCode' => '21e1f916-aa1a-11e8-9ff4-315000316505',
+        'metricaClientId' => 'c567ab51-f16f-11e8-9ff4-3150002079f9'
     ];
 
     public static $attrAlias = [
@@ -49,7 +50,8 @@ class Counterparty
         'Дата регистрации анкеты' => 'dateRegistered',
         'Источник' => 'source',
         'Отзыв' => 'feedback',
-        'Промокод' => 'promoCode'
+        'Промокод' => 'promoCode',
+        'ClientID Metrica' => 'metricaClientId'
     ];
 
     public $attrs = [];
@@ -251,6 +253,10 @@ class Counterparty
         return $this->stringAttr($fname, $arg);
     }
 
+    function metricaClientId(string $arg = null) {
+        $fname = __FUNCTION__;
+        return $this->stringAttr($fname, $arg);
+    }
 
     /***************** SMS verification part *******************/
     var $allowedOwners = [

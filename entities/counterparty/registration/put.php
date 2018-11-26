@@ -12,3 +12,5 @@ $manager->put($counterparty);
 
 $userManager = new WPUserManager();
 $userManager->createUser($counterparty);
+
+echo $manager->encode($counterparty);
