@@ -69,7 +69,7 @@ class WPUserManager
         ];
 
 
-        if ($email !== 'samsonov.gleb@gmail.com') {
+        if ($email !== 'samsonov.gleb@gmail.com' && $email !== '' && $email !== null) {
             $user = get_user_by('email', $email);
 
             if (empty($user)) {
