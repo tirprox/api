@@ -3,6 +3,16 @@
 namespace dreamwhiteAPIv1;
 require "../../../includes.php";
 
+/*
+WEBHOOK CREATION:
+POST  https://online.moysklad.ru/api/remap/1.1/entity/webhook/9a59ca4c-5d07-11e9-9107-504800033e26
+{
+            "entityType": "counterparty",
+            "url": "http://api.dreamwhite.ru/entities/counterparty/registration/counterparty-created-webhook.php",
+            "action": "CREATE"
+}
+*/
+
 ini_set('display_startup_errors', 1);
 ini_set('display_errors', 1);
 error_reporting(-1);
