@@ -56,6 +56,22 @@ if (empty($tags) && in_array($owner, $allowedOwners)) {
 echo $counterparty->props['name'];
 echo $counterparty->props['phone'];
 
+$phone = $counterparty->props['phone'];
+$phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+    try {
+        $phoneProto = $phoneUtil->parse($phone, "RU");
+    } catch (\libphonenumber\NumberParseException $e) {
+        var_dump($e);
+    }
+    $isValid = $phoneUtil->isValidNumber($phoneProto);
+
+    if ($isValid) {
+        $phone = $phoneUtil->format($phoneProto, \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
+        $counterparty->props['phone'] = $phone;
+        $manager->put($counterparty);
+    }
+
+
 
 //file_put_contents('log.json', $counterparty);
 
