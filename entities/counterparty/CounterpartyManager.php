@@ -9,43 +9,36 @@
 namespace dreamwhiteAPIv1;
 //require_once "../../includes.php";
 
-class CounterpartyManager
-{
+class CounterpartyManager {
     const COUNTERPARTY_BASE_URL = "https://online.moysklad.ru/api/remap/1.1/entity/counterparty/";
     const MS_BASE_URL = "https://online.moysklad.ru/api/remap/1.1/entity/";
     const MS_REPORT_URL = "https://online.moysklad.ru/api/remap/1.1/report/counterparty";
     private $client;
 
-    function __construct()
-    {
+    function __construct() {
         $connector = new Connector();
         $this->client = $connector->client;
     }
 
     //returns encoded json string ready to be sent
-    function encode(Counterparty $counterparty): string
-    {
+    function encode(Counterparty $counterparty): string {
 
-        $encoded = [
-            "name" => $counterparty->props['name'],
-            "phone" => $counterparty->props['phone'],
-            "email" => $counterparty->props['email'],
-            "tags" => $counterparty->props['tags'],
-            "companyType" => "individual",
-            "group" => [
-                "meta" => [
-                    "href" => "https://online.moysklad.ru/api/remap/1.1/entity/group/59c74466-a4ef-11e7-7a69-8f5500021289",
-                    "metadataHref" => "https://online.moysklad.ru/api/remap/1.1/entity/group/metadata",
-                    "type" => "group",
-                    "mediaType" => "application/json"
-                ]
-            ],
-            // "attributes" => $counterparty->attrs
+        $encoded = [];
+
+        $encoded['tags'] = $counterparty->props['tags'];
+        $encoded['companyType'] = "individual";
+        $encoded['group'] = [
+            "meta" => [
+                "href" => "https://online.moysklad.ru/api/remap/1.1/entity/group/59c74466-a4ef-11e7-7a69-8f5500021289",
+                "metadataHref" => "https://online.moysklad.ru/api/remap/1.1/entity/group/metadata",
+                "type" => "group",
+                "mediaType" => "application/json"
+            ]
         ];
 
-        /*if ($counterparty->id() !== '') {
-            $encoded['id'] = $counterparty->id();
-        }*/
+        if ($counterparty->props["name"] !== '') $encoded["name"] = $counterparty->props["name"];
+        if ($counterparty->props["phone"] !== '') $encoded["phone"] = $counterparty->props["phone"];
+        if ($counterparty->props["email"] !== '') $encoded["email"] = $counterparty->props["email"];
 
         $a = [];
 
@@ -65,12 +58,12 @@ class CounterpartyManager
         $encoded['attributes'] = $a;
 
         //echo json_encode($encoded,JSON_UNESCAPED_UNICODE);
+        file_put_contents('last_encoded.json', json_encode($encoded, JSON_UNESCAPED_UNICODE));
         return json_encode($encoded, JSON_UNESCAPED_UNICODE);
 
     }
 
-    function decode($json) /*: Counterparty*/
-    {
+    function decode($json) /*: Counterparty*/ {
         $json = json_decode($json, true);
         $counterparty = new Counterparty();
 
@@ -79,18 +72,19 @@ class CounterpartyManager
         if (isset($json['rows'])) {
             if (empty($json['rows'])) return $counterparty;
             $data = $json['rows'][0];
-        } else {
+        }
+        else {
             $data = $json;
         }
 
         $counterparty->raw = $json;
 
-
         // Encoding props
         foreach ($counterparty->props as $key => $value) {
             if ($key === 'owner' || $key === 'group') {
                 $counterparty->props[$key] = $data[$key]['meta']['href'] ?? '';
-            } else {
+            }
+            else {
                 $counterparty->props[$key] = $data[$key] ?? '';
             }
 
@@ -116,33 +110,27 @@ class CounterpartyManager
         return $counterparty;
     }
 
-
-    function getByPhone(string $phone): Counterparty
-    {
+    function getByPhone(string $phone): Counterparty {
         return $this->search($phone);
     }
 
-    function getByEmail(string $email): Counterparty
-    {
+    function getByEmail(string $email): Counterparty {
         return $this->search($email);
     }
 
-    function filter(string $attr, string $query)
-    {
+    function filter(string $attr, string $query) {
         $url = self::MS_BASE_URL . 'counterparty?filter=' . $attr . '=' . $query;
         $response = $this->client->get($url);
         return $this->decode($response->getBody());
     }
 
-    function search(string $query)
-    {
+    function search(string $query) {
         $url = self::MS_BASE_URL . 'counterparty?search=' . $query;
         $response = $this->client->get($url);
         return $this->decode($response->getBody());
     }
 
-    function getAll()
-    {
+    function getAll() {
         $limitedUrl = self::MS_BASE_URL . "counterparty?limit=100";
 
         $responses = [];
@@ -159,7 +147,7 @@ class CounterpartyManager
             //print $offset . " ";
             $url = $limitedUrl . "&offset=" . $offset;
             $requests[] = new \GuzzleHttp\Psr7\Request('GET', $url);
-            $offset+=100;
+            $offset += 100;
         }
         $counter = 0;
 
@@ -183,8 +171,7 @@ class CounterpartyManager
         return $responses;
     }
 
-    function getAllReports()
-    {
+    function getAllReports() {
         $limitedUrl = self::MS_REPORT_URL . "?limit=100";
 
         $responses = [];
@@ -201,7 +188,7 @@ class CounterpartyManager
             //print $offset . " ";
             $url = $limitedUrl . "&offset=" . $offset;
             $requests[] = new \GuzzleHttp\Psr7\Request('GET', $url);
-            $offset+=100;
+            $offset += 100;
         }
         $counter = 0;
 
@@ -225,25 +212,21 @@ class CounterpartyManager
         return $responses;
     }
 
-    function getById(string $id): Counterparty
-    {
+    function getById(string $id): Counterparty {
         return $this->getByUrl(self::COUNTERPARTY_BASE_URL . $id);
     }
 
-    function getByUrl(string $url): Counterparty
-    {
+    function getByUrl(string $url): Counterparty {
         $response = $this->client->get($url);
         return $this->decode($response->getBody());
     }
 
-    function post(Counterparty $counterparty)
-    {
+    function post(Counterparty $counterparty) {
         $body = $this->encode($counterparty);
         $this->client->post(self::COUNTERPARTY_BASE_URL, ['body' => $body]);
     }
 
-    function put(Counterparty $counterparty)
-    {
+    function put(Counterparty $counterparty) {
         $body = $this->encode($counterparty);
         $this->client->put($counterparty->props['href'], ['body' => $body]);
     }

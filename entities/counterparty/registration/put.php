@@ -10,7 +10,10 @@ $counterparty = DataHelper::encode($data, 'anketa-sms');
 $manager = new CounterpartyManager();
 $manager->put($counterparty);
 
-$userManager = new WPUserManager();
-$userManager->createUser($counterparty);
+if ($counterparty->email() !== '') {
+    $userManager = new WPUserManager();
+    $userManager->createUser($counterparty);
+}
+
 
 echo $manager->encode($counterparty);

@@ -57,7 +57,8 @@ echo $counterparty->props['name'];
 echo $counterparty->props['phone'];
 
 $phone = $counterparty->props['phone'];
-$phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+if ($phone !== '') {
+    $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
     try {
         $phoneProto = $phoneUtil->parse($phone, "RU");
     } catch (\libphonenumber\NumberParseException $e) {
@@ -70,6 +71,8 @@ $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
         $counterparty->props['phone'] = $phone;
         $manager->put($counterparty);
     }
+}
+
 
 
 
