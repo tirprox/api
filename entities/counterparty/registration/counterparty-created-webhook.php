@@ -21,6 +21,8 @@ $input = file_get_contents('php://input');
 
 $data = json_decode($input, true);
 
+file_put_contents('last-webhook.json', json_encode($data, JSON_UNESCAPED_UNICODE));
+
 $url = $data['events'][0]['meta']['href'];
 
 $manager = new CounterpartyManager();
@@ -48,31 +50,31 @@ echo $owner . PHP_EOL;
 
 $tags = $counterparty->props['tags'];
 
-if (empty($tags) && in_array($owner, $allowedOwners)) {
-    $sms = new SendSMS();
-    $sms->sendBySite($phone, $name, $ownerToSiteMap[$owner]);
-}
 
-echo $counterparty->props['name'];
-echo $counterparty->props['phone'];
-
-$phone = $counterparty->props['phone'];
 if ($phone !== '') {
     $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
     try {
         $phoneProto = $phoneUtil->parse($phone, "RU");
+      $isValid = $phoneUtil->isValidNumber($phoneProto);
+
+      if ($isValid) {
+        $phone = $phoneUtil->format($phoneProto, \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
+        $counterparty->props['phone'] = $phone;
+      }
     } catch (\libphonenumber\NumberParseException $e) {
         var_dump($e);
     }
-    $isValid = $phoneUtil->isValidNumber($phoneProto);
+  $manager->put($counterparty);
 
-    if ($isValid) {
-        $phone = $phoneUtil->format($phoneProto, \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
-        $counterparty->props['phone'] = $phone;
-        $manager->put($counterparty);
-    }
+  if (empty($tags) && in_array($owner, $allowedOwners)) {
+    $sms = new SendSMS();
+    $sms->sendBySite($phone, $name, $ownerToSiteMap[$owner]);
+  }
+
 }
 
+echo $counterparty->props['name'];
+echo $counterparty->props['phone'];
 
 
 
