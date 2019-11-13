@@ -72,7 +72,9 @@ class WPUserManager
         if ($email !== 'samsonov.gleb@gmail.com' && $email !== '' && $email !== null) {
             $user = get_user_by('email', $email);
 
-            if (empty($user)) {
+            $userExists = !empty($user);
+
+            if (!$userExists) {
                 $user_id = wp_insert_user( $userdata ); // creating user with set parameters
             }
             else {
@@ -96,8 +98,9 @@ class WPUserManager
             update_user_meta( $user_id, 'billing_email', $email );
             update_user_meta( $user_id, 'billing_phone', $phone );
 
-
+          if (!$userExists) {
             $this->sendMail($userdata); // email credentials to user
+          }
         }
 
 
