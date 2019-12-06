@@ -21,7 +21,9 @@ class DataHelper
             ->address($data['client']['location']['address'] ?? "")
             ->postcode($data['client']['location']['postcode'] ?? "")
             ->promoCode($data['client']['promoCode'] ?? "")
-            ->metricaClientId($data['client']['metricaClientId'] ?? "");
+            ->metricaClientId($data['client']['metricaClientId'] ?? "")
+          ->gaClientId($data['client']['gaClientId'] ?? "")
+          ->utmstatClientId($data['client']['utmstatClientId'] ?? "");
 
         $source = $data['infoSource']['isCustom'] ? $data['infoSource']['custom'] : $data['infoSource']['source'];
         $counterparty->source($source);

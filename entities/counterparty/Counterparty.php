@@ -36,7 +36,9 @@ class Counterparty
         'source' => 'fe06e4f2-d034-11e7-7a34-5acf0006a4c2',
         'feedback' => 'b3d9786a-d361-11e7-7a6c-d2a9001aff01',
         'promoCode' => '21e1f916-aa1a-11e8-9ff4-315000316505',
-        'metricaClientId' => 'c567ab51-f16f-11e8-9ff4-3150002079f9'
+        'metricaClientId' => 'c567ab51-f16f-11e8-9ff4-3150002079f9',
+       'gaClientId' => 'f15cf858-ffc0-11e8-9ff4-3150000942f1',
+      'utmstatClientId' => '343d15b6-15ca-11ea-0a80-00a80008d59b'
     ];
 
     public static $attrAlias = [
@@ -51,7 +53,9 @@ class Counterparty
         'Источник' => 'source',
         'Отзыв' => 'feedback',
         'Промокод' => 'promoCode',
-        'ClientID Metrica' => 'metricaClientId'
+        'ClientID Metrica' => 'metricaClientId',
+      'GA ID' => 'gaClientId',
+       'ClientID UTMSTAT' => 'utmstatClientId'
     ];
 
     public $attrs = [];
@@ -257,6 +261,16 @@ class Counterparty
         $fname = __FUNCTION__;
         return $this->stringAttr($fname, $arg);
     }
+
+  function gaClientId(string $arg = null) {
+    $fname = __FUNCTION__;
+    return $this->stringAttr($fname, $arg);
+  }
+
+  function utmstatClientId(string $arg = null) {
+    $fname = __FUNCTION__;
+    return $this->stringAttr($fname, $arg);
+  }
 
     /***************** SMS verification part *******************/
     var $allowedOwners = [
